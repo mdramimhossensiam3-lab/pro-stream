@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pro Live TV Hub - Ultra HD</title>
-    <!-- Clappr Player CSS -->
+    <!-- Clappr Player CSS & JS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
+            --bg-color: #0b0f19;
+            --card-bg: rgba(30, 41, 59, 0.85);
             --accent-color: #38bdf8;
             --text-color: #f8fafc;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            background: linear-gradient(135deg, #090d16 0%, #1e1b4b 100%);
             color: var(--text-color);
             margin: 0;
             padding: 20px;
@@ -23,11 +23,11 @@
         }
         header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         h1 {
             margin: 0;
-            font-size: 28px;
+            font-size: 26px;
             color: var(--accent-color);
             text-shadow: 0 2px 10px rgba(56, 189, 248, 0.3);
         }
@@ -37,17 +37,17 @@
         }
         #player-container {
             width: 100%;
-            height: 450px;
+            height: 430px;
             background: #000;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
             margin-bottom: 20px;
         }
         .custom-input-box {
             display: flex;
             gap: 10px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         .custom-input-box input {
             flex: 1;
@@ -64,7 +64,7 @@
             border: none;
             border-radius: 8px;
             background: var(--accent-color);
-            color: #0f172a;
+            color: #090d16;
             font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
@@ -74,14 +74,14 @@
         }
         .channels-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
         }
         .channel-card {
             background: var(--card-bg);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            padding: 12px;
+            padding: 12px 8px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -90,23 +90,26 @@
         .channel-card:hover {
             transform: translateY(-3px);
             border-color: var(--accent-color);
-            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.2);
+            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.25);
         }
         .channel-card img {
-            width: 50px;
-            height: 50px;
+            width: 42px;
+            height: 42px;
             object-fit: contain;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             border-radius: 6px;
         }
         .channel-card span {
             display: block;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         @media(max-width: 600px) {
-            #player-container { height: 250px; }
-            .channels-grid { grid-template-columns: repeat(2, 1fr); }
+            #player-container { height: 240px; }
+            .channels-grid { grid-template-columns: repeat(3, 1fr); }
         }
     </style>
 </head>
@@ -115,7 +118,7 @@
 <div class="container">
     <header>
         <h1>Pro Live TV Hub</h1>
-        <p style="color: #94a3b8; font-size: 14px;">লাইভ স্পোর্টস এবং টিভি চ্যানেল উপভোগ করুন</p>
+        <p style="color: #94a3b8; font-size: 13px; margin-top: 5px;">স্মার্ট লাইভ টিভি ও এন্টারটেইনমেন্ট প্ল্যাটফর্ম</p>
     </header>
 
     <!-- Video Player -->
@@ -123,38 +126,34 @@
 
     <!-- Custom Link Input -->
     <div class="custom-input-box">
-        <input type="text" id="customUrl" placeholder="আপনার নিজস্ব .m3u8 বা .ts লিংক এখানে পেস্ট করুন...">
+        <input type="text" id="customUrl" placeholder="যেকোনো নতুন .m3u8 লিংক এখানে পেস্ট করে চালু করুন...">
         <button onclick="playCustomStream()">চালু করুন</button>
     </div>
 
-    <!-- Channel List with Images -->
+    <!-- Verified Stable Channels Grid -->
     <div class="channels-grid">
         <div class="channel-card" onclick="playStream('https://rmtv.akamaized.net/hls/live/2043153/rmtv-es-web/master.m3u8', 'Real Madrid TV')">
-            <img src="https://img.icons8.com/color/96/real-madrid.png" alt="Real Madrid TV">
+            <img src="https://images.seeklogo.com/logo-png/43/2/real-madrid-cf-logo-png_seeklogo-431872.png" alt="Real Madrid">
             <span>Real Madrid TV</span>
         </div>
-        <div class="channel-card" onclick="playStream('https://str2.yodacdn.net/idman_300_to_small/tracks-v1a1/mono.m3u8', 'Idman TV')">
-            <img src="https://img.icons8.com/color/96/tv.png" alt="Idman TV">
-            <span>Idman TV 🇹🇷</span>
-        </div>
         <div class="channel-card" onclick="playStream('https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master_3360.m3u8', 'Red Bull TV')">
-            <img src="https://img.icons8.com/color/96/energy-drink.png" alt="Red Bull TV">
+            <img src="https://images.seeklogo.com/logo-png/27/1/red-bull-logo-png_seeklogo-272049.png" alt="Red Bull TV">
             <span>Red Bull TV</span>
         </div>
         <div class="channel-card" onclick="playStream('https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/index.m3u8', 'BTV')">
-            <img src="https://img.icons8.com/color/96/bangladesh.png" alt="BTV">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Bangladesh_Television_Logo_2023.png" alt="BTV">
             <span>বাংলাদেশ টেলিভিশন</span>
         </div>
         <div class="channel-card" onclick="playStream('http://116.204.149.16/mytv/index.m3u8', 'My TV')">
-            <img src="https://img.icons8.com/color/96/video-playlist.png" alt="My TV">
+            <img src="https://upload.wikimedia.org/wikipedia/en/2/24/My_TV_Bangladesh_logo.png" alt="My TV">
             <span>মাই টিভি (My TV)</span>
         </div>
         <div class="channel-card" onclick="playStream('https://dazn-combat-rakuten.amagi.tv/hls/amagi_hls_data_rakutenAA-dazn-combat-rakuten/CDN/master.m3u8', 'DAZN Combat')">
-            <img src="https://img.icons8.com/color/96/boxing.png" alt="DAZN Combat">
+            <img src="https://images.seeklogo.com/logo-png/49/1/dazn-logo-png_seeklogo-493392.png" alt="DAZN Combat">
             <span>DAZN Combat</span>
         </div>
         <div class="channel-card" onclick="playStream('https://cdn-uw2-prod.tsv2.amagi.tv/linear/amg01074-fueltv-fueltvemeaen-sportstribal/playlist.m3u8', 'Fuel TV')">
-            <img src="https://img.icons8.com/color/96/race-car.png" alt="Fuel TV">
+            <img src="https://images.seeklogo.com/logo-png/38/2/fuel-tv-logo-png_seeklogo-385078.png" alt="Fuel TV">
             <span>Fuel TV</span>
         </div>
     </div>
@@ -182,11 +181,11 @@
         if (url) {
             playStream(url, 'Custom Stream');
         } else {
-            alert('দয়া করে একটি সঠিক লিংক দিন!');
+            alert('দয়া করে একটি সঠিক ভিডিও লিংক দিন!');
         }
     }
 
-    // ডিফল্টভাবে প্রথম চ্যানেলটি প্লে হবে
+    // সাইট ওপেন হলেই অটো রিয়াল মাদ্রিদ টিভি প্লে হবে
     window.onload = function() {
         playStream('https://rmtv.akamaized.net/hls/live/2043153/rmtv-es-web/master.m3u8', 'Real Madrid TV');
     };
