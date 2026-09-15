@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Live TV Hub</title>
+    <title>Pro Live TV Hub - 100% Working Channels</title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
     <style>
         :root {
@@ -145,7 +145,7 @@
         <div class="top-bar" id="current-title">Pro Live TV Hub</div>
         <div id="player-container"></div>
         <div class="custom-input-box">
-            <input type="text" id="customUrl" placeholder="ডাইरेक्ट .m3u8 বা .ts লিংক পেস্ট করুন...">
+            <input type="text" id="customUrl" placeholder="আপনার নিজের .m3u8 বা .ts লিংক এখানে পেস্ট করুন...">
             <button onclick="playCustomStream()">চালু করুন</button>
         </div>
     </div>
@@ -154,20 +154,32 @@
     <div class="right-section">
         <input type="text" class="search-box" placeholder="Search Channel..." onkeyup="filterChannels()">
         <div class="channels-list" id="channelList">
-            <div class="channel-item" onclick="playStream('http://rgkkw.live:80/live/1Aoen7elp5/IgMJ60tmAa/130714.ts', 'T Sports Live')">
-                <span>⚽ T Sports Live</span>
+            <div class="channel-item" onclick="playStream('http://198.195.239.50:8095/tsports/tracks-v1a1/mono.m3u8', 'T Sports FHD')">
+                <span>⚽ T Sports FHD</span>
             </div>
-            <div class="channel-item" onclick="playStream('https://tvsen5.aynaott.com/PtvSports/index.m3u8', 'PTV Sports')">
-                <span>🏏 PTV Sports</span>
+            <div class="channel-item" onclick="playStream('http://114.130.57.233:8080/LIVE-Sports/video.m3u8?token=SkQuhAXZxgBan1', 'T Sports FHD 2')">
+                <span>🏏 T Sports FHD 2</span>
             </div>
-            <div class="channel-item" onclick="playStream('https://rmtv.akamaized.net/hls/live/2043153/rmtv-es-web/master.m3u8', 'Real Madrid TV')">
-                <span>⚽ Real Madrid TV</span>
+            <div class="channel-item" onclick="playStream('http://198.195.239.50:8095/btv/tracks-v1a1/mono.m3u8', 'Bangladesh Television (BTV)')">
+                <span>📺 BTV FHD</span>
             </div>
-            <div class="channel-item" onclick="playStream('https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master_3360.m3u8', 'Red Bull TV')">
-                <span>🏎️ Red Bull TV</span>
+            <div class="channel-item" onclick="playStream('http://198.195.239.50:8095/somoyTv/tracks-v1a1/mono.m3u8', 'Somoy TV FHD')">
+                <span>📰 Somoy TV FHD</span>
             </div>
-            <div class="channel-item" onclick="playStream('https://dazn-combat-rakuten.amagi.tv/hls/amagi_hls_data_rakutenAA-dazn-combat-rakuten/CDN/master.m3u8', 'DAZN Combat')">
-                <span>🥊 DAZN Combat</span>
+            <div class="channel-item" onclick="playStream('https://live20.bozztv.com/giatvplayout7/giatv-209611/tracks-v1a1/mono.ts.m3u8', 'Gopal Bhar TV')">
+                <span>👶 Gopal Bhar TV</span>
+            </div>
+            <div class="channel-item" onclick="playStream('https://live20.bozztv.com/giatvplayout7/giatv-209902/tracks-v1a1/mono.ts.m3u8', 'Doreamon TV')">
+                <span>🐱 Doreamon TV</span>
+            </div>
+            <div class="channel-item" onclick="playStream('https://live20.bozztv.com/giatvplayout7/giatv-209622/tracks-v1a1/mono.ts.m3u8', 'Motu Patlu TV')">
+                <span>🍿 Motu Patlu TV</span>
+            </div>
+            <div class="channel-item" onclick="playStream('https://live20.bozztv.com/giatvplayout7/giatv-208314/tracks-v1a1/mono.ts.m3u8', 'Tom & Jerry TV')">
+                <span>🐭 Tom & Jerry TV</span>
+            </div>
+            <div class="channel-item" onclick="playStream('https://vodzong.mjunoon.tv:8087/streamtest/SaudiQuran-142/playlist.m3u8', 'Saudi Quran TV')">
+                <span>🕋 Saudi Quran TV</span>
             </div>
         </div>
     </div>
@@ -195,7 +207,7 @@
         if (url) {
             playStream(url, 'Custom Stream');
         } else {
-            alert('দয়া করে একটি সঠিক ডাইরেক্ট স্ট্রিম লিংক দিন!');
+            alert('দয়া করে সঠিক লিংক দিন!');
         }
     }
 
@@ -209,7 +221,7 @@
     }
 
     window.onload = function() {
-        playStream('http://rgkkw.live:80/live/1Aoen7elp5/IgMJ60tmAa/130714.ts', 'T Sports Live');
+        playStream('http://198.195.239.50:8095/tsports/tracks-v1a1/mono.m3u8', 'T Sports FHD');
     };
 </script>
 
