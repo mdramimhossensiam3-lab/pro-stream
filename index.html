@@ -3,158 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Live TV Hub - Ultra HD</title>
-    <!-- Clappr Player CSS & JS -->
+    <title>Pro Live TV - 100% Working Playlists</title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
     <style>
         :root {
             --bg-color: #0b0f19;
-            --card-bg: rgba(30, 41, 59, 0.85);
+            --panel-bg: rgba(17, 24, 39, 0.9);
             --accent-color: #38bdf8;
             --text-color: #f8fafc;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #090d16 0%, #1e1b4b 100%);
+            background: #050811;
             color: var(--text-color);
             margin: 0;
-            padding: 20px;
-            min-height: 100vh;
+            padding: 10px;
+            box-sizing: border-box;
         }
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        h1 {
-            margin: 0;
-            font-size: 26px;
-            color: var(--accent-color);
-            text-shadow: 0 2px 10px rgba(56, 189, 248, 0.3);
-        }
-        .container {
-            max-width: 900px;
+        .main-layout {
+            display: flex;
+            gap: 15px;
+            max-width: 1200px;
             margin: 0 auto;
+        }
+        /* Left Section: Player & Input */
+        .left-section {
+            flex: 2.5;
+            display: flex;
+            flex-direction: column;
+            background: var(--panel-bg);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .top-bar {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
         }
         #player-container {
             width: 100%;
-            height: 430px;
+            height: 420px;
             background: #000;
-            border-radius: 12px;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .custom-input-box {
             display: flex;
             gap: 10px;
-            margin-bottom: 20px;
         }
         .custom-input-box input {
             flex: 1;
-            padding: 12px 15px;
+            padding: 10px 12px;
             border-radius: 8px;
-            border: 1px solid #475569;
-            background: var(--card-bg);
+            border: 1px solid #374151;
+            background: #1f2937;
             color: #fff;
             outline: none;
-            font-size: 14px;
+            font-size: 13px;
         }
         .custom-input-box button {
-            padding: 12px 20px;
+            padding: 10px 16px;
             border: none;
             border-radius: 8px;
             background: var(--accent-color);
-            color: #090d16;
+            color: #0b0f19;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.3s;
+            transition: 0.2s;
         }
         .custom-input-box button:hover {
             opacity: 0.9;
         }
-        .channels-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 12px;
+        /* Right Section: Channels List */
+        .right-section {
+            flex: 1.2;
+            background: var(--panel-bg);
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+            max-height: 520px;
         }
-        .channel-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 12px 8px;
-            text-align: center;
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #374151;
+            background: #1f2937;
+            color: #fff;
+            outline: none;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        .channels-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-right: 4px;
+        }
+        .channel-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #1f2937;
+            padding: 8px 10px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            border: 1px solid transparent;
+            transition: 0.2s;
         }
-        .channel-card:hover {
-            transform: translateY(-3px);
+        .channel-item:hover {
             border-color: var(--accent-color);
-            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.25);
+            background: #374151;
         }
-        .channel-card img {
-            width: 42px;
-            height: 42px;
-            object-fit: contain;
-            margin-bottom: 6px;
-            border-radius: 6px;
-        }
-        .channel-card span {
-            display: block;
+        .channel-item span {
             font-size: 13px;
             font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
-        @media(max-width: 600px) {
-            #player-container { height: 240px; }
-            .channels-grid { grid-template-columns: repeat(3, 1fr); }
+        @media(max-width: 768px) {
+            .main-layout { flex-direction: column; }
+            #player-container { height: 250px; }
+            .right-section { max-height: 350px; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1>Pro Live TV Hub</h1>
-        <p style="color: #94a3b8; font-size: 13px; margin-top: 5px;">স্মার্ট লাইভ টিভি ও এন্টারটেইনমেন্ট প্ল্যাটফর্ম</p>
-    </header>
-
-    <!-- Video Player -->
-    <div id="player-container"></div>
-
-    <!-- Custom Link Input -->
-    <div class="custom-input-box">
-        <input type="text" id="customUrl" placeholder="যেকোনো নতুন .m3u8 লিংক এখানে পেস্ট করে চালু করুন...">
-        <button onclick="playCustomStream()">চালু করুন</button>
+<div class="main-layout">
+    <!-- Player Panel -->
+    <div class="left-section">
+        <div class="top-bar" id="current-title">Pro Live TV Hub</div>
+        <div id="player-container"></div>
+        <div class="custom-input-box">
+            <input type="text" id="customUrl" placeholder="আপনার দেওয়া m3u8/ts লিংক এখানে পেস্ট করুন...">
+            <button onclick="playCustomStream()">চালু করুন</button>
+        </div>
     </div>
 
-    <!-- Verified Stable Channels Grid -->
-    <div class="channels-grid">
-        <div class="channel-card" onclick="playStream('https://rmtv.akamaized.net/hls/live/2043153/rmtv-es-web/master.m3u8', 'Real Madrid TV')">
-            <img src="https://images.seeklogo.com/logo-png/43/2/real-madrid-cf-logo-png_seeklogo-431872.png" alt="Real Madrid">
-            <span>Real Madrid TV</span>
-        </div>
-        <div class="channel-card" onclick="playStream('https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master_3360.m3u8', 'Red Bull TV')">
-            <img src="https://images.seeklogo.com/logo-png/27/1/red-bull-logo-png_seeklogo-272049.png" alt="Red Bull TV">
-            <span>Red Bull TV</span>
-        </div>
-        <div class="channel-card" onclick="playStream('https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/index.m3u8', 'BTV')">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Bangladesh_Television_Logo_2023.png" alt="BTV">
-            <span>বাংলাদেশ টেলিভিশন</span>
-        </div>
-        <div class="channel-card" onclick="playStream('http://116.204.149.16/mytv/index.m3u8', 'My TV')">
-            <img src="https://upload.wikimedia.org/wikipedia/en/2/24/My_TV_Bangladesh_logo.png" alt="My TV">
-            <span>মাই টিভি (My TV)</span>
-        </div>
-        <div class="channel-card" onclick="playStream('https://dazn-combat-rakuten.amagi.tv/hls/amagi_hls_data_rakutenAA-dazn-combat-rakuten/CDN/master.m3u8', 'DAZN Combat')">
-            <img src="https://images.seeklogo.com/logo-png/49/1/dazn-logo-png_seeklogo-493392.png" alt="DAZN Combat">
-            <span>DAZN Combat</span>
-        </div>
-        <div class="channel-card" onclick="playStream('https://cdn-uw2-prod.tsv2.amagi.tv/linear/amg01074-fueltv-fueltvemeaen-sportstribal/playlist.m3u8', 'Fuel TV')">
-            <img src="https://images.seeklogo.com/logo-png/38/2/fuel-tv-logo-png_seeklogo-385078.png" alt="Fuel TV">
-            <span>Fuel TV</span>
+    <!-- Channels List Panel -->
+    <div class="right-section">
+        <input type="text" class="search-box" placeholder="Search Channel..." onkeyup="filterChannels()">
+        <div class="channels-list" id="channelList">
+            
+            <div class="channel-item" onclick="playStream('http://rgkkw.live:80/live/1Aoen7elp5/IgMJ60tmAa/130714.ts', 'T Sports')">
+                <span>⚽ T Sports Live</span>
+            </div>
+            <div class="channel-item" onclick="playStream('https://tvsen5.aynaott.com/PtvSports/index.m3u8', 'PTV Sports')">
+                <span>🏏 PTV Sports</span>
+            </div>
+            <div class="channel-item" onclick="playStream('https://playlist-share-abux.pages.dev/sun-network.m3u', 'Sun NXT Playlist')">
+                <span>📺 Sun NXT Network</span>
+            </div>
+            <div class="channel-item" onclick="playStream('https://iptv-scraper-zilla.pages.dev/CricHD.m3u', 'CricHD 1 & 2')">
+                <span>🏏 CricHD Live</span>
+            </div>
+            <div class="channel-item" onclick="playStream('https://iptv-scraper-zilla.pages.dev/distrotv.m3u', 'Distro TV')">
+                <span>🎬 Distro TV</span>
+            </div>
+            <div class="channel-item" onclick="playStream('https://iptv-scraper-zilla.pages.dev/SamsungTVPlus-All.m3u', 'Samsung TV Plus')">
+                <span>📺 Samsung TV Plus</span>
+            </div>
+            <div class="channel-item" onclick="playStream('https://iptv-scraper-zilla.pages.dev/PlutoTV-All.m3u', 'Pluto TV')">
+                <span>📺 Pluto TV All</span>
+            </div>
+            <div class="channel-item" onclick="playStream('https://iptv-scraper-zilla.pages.dev/tubi_playlist.m3u', 'TUBI Playlist')">
+                <span>🎥 TUBI TV</span>
+            </div>
+            
         </div>
     </div>
 </div>
@@ -166,13 +191,13 @@
         if (player) {
             player.destroy();
         }
+        document.getElementById('current-title').innerText = title;
         player = new Clappr.Player({
             source: url,
             parentId: "#player-container",
             autoPlay: true,
             height: "100%",
             width: "100%",
-            plugins: [],
         });
     }
 
@@ -181,13 +206,21 @@
         if (url) {
             playStream(url, 'Custom Stream');
         } else {
-            alert('দয়া করে একটি সঠিক ভিডিও লিংক দিন!');
+            alert('দয়া করে সঠিক লিংক দিন!');
         }
     }
 
-    // সাইট ওপেন হলেই অটো রিয়াল মাদ্রিদ টিভি প্লে হবে
+    function filterChannels() {
+        let input = document.querySelector('.search-box').value.toLowerCase();
+        let items = document.querySelectorAll('.channel-item');
+        items.forEach(item => {
+            let text = item.innerText.toLowerCase();
+            item.style.display = text.includes(input) ? 'flex' : 'none';
+        });
+    }
+
     window.onload = function() {
-        playStream('https://rmtv.akamaized.net/hls/live/2043153/rmtv-es-web/master.m3u8', 'Real Madrid TV');
+        playStream('http://rgkkw.live:80/live/1Aoen7elp5/IgMJ60tmAa/130714.ts', 'T Sports');
     };
 </script>
 
