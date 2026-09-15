@@ -3,360 +3,277 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Live TV Player - Pro Hub</title>
-  
-  <!-- PWA Manifest -->
-  <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiTGl2ZSBUViBQbGF5ZXIiLCJzaG9ydF9uYW1lIjoiVFYgUGxheWVyIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwMDAwMDAiLCJ0aGVtZV9jb2xvciI6IiNmZjRkNmd9">
-  <meta name="theme-color" content="#ff4d6d">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="TV Player">
+  <title>CyberStream - Pro TV Hub</title>
   
   <style>
     :root{
-      --accent:#ff4d6d;
-      --accent-light:#ff8099;
-      --glass:rgba(255,255,255,0.05);
-      --muted:#bfcbd6;
+      --bg: #0a0e17;
+      --card-bg: #131b2e;
+      --neon: #00ffcc;
+      --neon-glow: rgba(0, 255, 204, 0.3);
+      --text: #f1f5f9;
+      --muted: #94a3b8;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     body{
-      font-family:"Poppins",Arial,sans-serif;
-      background:url('https://images.unsplash.com/photo-1604079628040-94301bb21b91?auto=format&fit=crop&w=1350&q=80') center/cover no-repeat fixed;
-      color:#fff;overflow-x:hidden;
-    }
-    body::after{
-      content:"";position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:0;
-    }
-
-    .container{position:relative;z-index:2;max-width:1100px;margin:24px auto;padding:18px;}
-
-    header{
-      display:flex;align-items:center;justify-content:center;
-      font-size:22px;font-weight:600;color:var(--accent);
-      text-shadow:0 0 15px var(--accent-light);margin-bottom:14px;
+      font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 90px;
     }
 
-    /* Install Button */
-    .install-btn-top{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      background:linear-gradient(135deg, var(--accent), var(--accent-light));
-      color:#fff;
-      border:none;
-      padding:12px 24px;
-      border-radius:10px;
-      font-weight:600;
-      font-size:14px;
-      cursor:pointer;
-      margin-bottom:16px;
-      width:100%;
-      transition:all 0.3s ease;
-      box-shadow:0 4px 20px rgba(255,77,109,0.3);
-      position:relative;
-      z-index:2;
+    /* Top Navbar */
+    .top-header {
+      background: rgba(19, 27, 46, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-    .install-btn-top:hover{
-      transform:translateY(-2px);
-      box-shadow:0 6px 30px rgba(255,77,109,0.5);
-    }
-    .install-btn-top:active{
-      transform:scale(0.98);
-    }
-    .install-btn-top .icon{font-size:18px;}
-    .install-btn-top.hidden{display:none;}
-
-    /* player */
-    .player-box{
-      background:rgba(0,0,0,0.45);
-      border-radius:14px;overflow:hidden;
-      box-shadow:0 10px 40px rgba(255,77,109,0.25);
-      border:1px solid rgba(255,255,255,0.04);
-    }
-    video, .youtube-container{
-      width:100%;height:56vw;max-height:520px;background:#000;display:block;
-    }
-    .youtube-container iframe {
-      width:100%;height:100%;border:none;
+    .logo {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--neon);
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
-    .now-playing{
-      padding:10px 14px;color:#ffe8ee;font-size:15px;
-      display:flex;align-items:center;justify-content:space-between;
-      border-bottom:1px solid rgba(255,255,255,0.04);
-      background:linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
-    }
-    .now-playing .title{font-weight:700;color:var(--accent-light);}
-    .now-playing .sub{font-size:13px;color:var(--muted)}
-
-    /* category section */
-    .section{
-      margin-top:20px;display:none;opacity:0;transform:translateY(10px);
-      transition:opacity .3s ease,transform .3s ease;
-    }
-    .section.active{display:block;opacity:1;transform:translateY(0);}
-    .section h3{
-      font-size:18px;color:var(--accent-light);margin-bottom:12px;
-      text-shadow:0 0 8px rgba(255,77,109,0.25)
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 15px;
     }
 
-    /* grid layout */
-    .channel-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
-      gap:16px;
+    /* Video Player Box */
+    .player-card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(0, 255, 204, 0.2);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      margin-bottom: 20px;
     }
-    .channel{
-      background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(0,0,0,0.2));
-      border-radius:12px;padding:10px;text-align:center;cursor:pointer;
-      border:1px solid rgba(255,255,255,0.06);
-      transition:all .25s ease;
-      box-shadow:0 4px 12px rgba(0,0,0,0.3);
+    .video-container {
+      width: 100%;
+      height: 480px;
+      background: #000;
+      position: relative;
     }
-    .channel:hover{
-      transform:translateY(-5px) scale(1.03);
-      border-color:var(--accent);
-      box-shadow:0 10px 25px rgba(255,77,109,0.25);
+    video, iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
     }
-    .channel img{
-      width:90px;height:60px;object-fit:contain;border-radius:8px;
-      margin-bottom:6px;background:#000;
+    .player-info {
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0,0,0,0.2);
+      border-top: 1px solid rgba(255,255,255,0.05);
     }
-    .channel span{
-      display:block;font-size:13px;color:#fff;text-shadow:0 0 4px rgba(0,0,0,0.4);
+    .now-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--neon);
+    }
+    .live-tag {
+      background: #ef4444;
+      color: #fff;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
     }
 
-    footer{text-align:center;font-size:12px;color:#aaa;margin-top:30px;padding-bottom:30px}
-
-    /* bottom nav */
-    .bottom-nav{
-      position:fixed;left:12px;right:12px;bottom:12px;height:70px;
-      background:linear-gradient(180deg, rgba(30,0,10,0.85), rgba(10,0,0,0.95));
-      border-radius:14px;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.05);
-      display:flex;justify-content:space-around;align-items:center;
-      z-index:50;box-shadow:0 0 25px rgba(255,77,109,0.35);
-      overflow-x: auto;
+    /* Channel Sections */
+    .section-title {
+      font-size: 16px;
+      color: var(--muted);
+      margin: 25px 0 12px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-left: 4px solid var(--neon);
+      padding-left: 8px;
     }
-    .nav-btn{
-      color:#ccc;text-align:center;font-size:12px;cursor:pointer;
-      display:flex;flex-direction:column;align-items:center;gap:5px;
-      transition:.2s ease;
-      padding: 0 8px;
-      flex-shrink: 0;
-    }
-    .nav-btn.active{color:var(--accent-light);text-shadow:0 0 10px var(--accent-light);}
-    .nav-btn .ico{font-size:20px}
-    .nav-btn .lbl{font-size:11px}
 
-    @media(max-width:700px){
-      video, .youtube-container{height:60vw}
-      .channel-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;}
-      .install-btn-top{padding:10px 18px;font-size:13px;}
+    .channels-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+    }
+
+    .channel-card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: all 0.2s ease;
+    }
+    .channel-card:hover {
+      border-color: var(--neon);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px var(--neon-glow);
+    }
+    .channel-card img {
+      width: 100%;
+      height: 70px;
+      object-fit: contain;
+      margin-bottom: 8px;
+      background: #000;
+      border-radius: 6px;
+    }
+    .channel-card span {
+      font-size: 12px;
+      font-weight: 600;
+      display: block;
+      color: var(--text);
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(13, 19, 33, 0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      z-index: 100;
+    }
+    .nav-item {
+      color: var(--muted);
+      text-align: center;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .nav-item.active {
+      color: var(--neon);
+      text-shadow: 0 0 10px var(--neon-glow);
+    }
+    .nav-item div:first-child {
+      font-size: 20px;
+      margin-bottom: 3px;
+    }
+
+    @media(max-width: 768px) {
+      .video-container { height: 260px; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <button class="install-btn-top" id="installBtn">
-      <span class="icon">📲</span>
-      <span>Install App - Add to Home Screen</span>
-    </button>
 
-    <div class="player-box">
-      <div id="player-wrapper">
-        <video id="tvplayer" controls playsinline></video>
+  <div class="top-header">
+    <div class="logo">⚡ CyberStream Hub</div>
+  </div>
+
+  <div class="container">
+    <div class="player-card">
+      <div class="video-container" id="playerBox">
+        <video id="videoPlayer" controls playsinline></video>
       </div>
-      <div class="now-playing">
+      <div class="player-info">
         <div>
-          <div style="font-size:13px;color:var(--muted)">Now Playing</div>
-          <div class="title" id="nowPlaying">—</div>
+          <div style="font-size: 11px; color: var(--muted);">NOW PLAYING</div>
+          <div class="now-title" id="nowPlayingText">Select a Channel</div>
         </div>
-        <div class="sub" id="nowSub">Ready</div>
+        <div class="live-tag">LIVE</div>
       </div>
     </div>
 
-    <div id="sectionsContainer"></div>
+    <div class="section-title">🏆 Sports Channels</div>
+    <div class="channels-grid">
+      <div class="channel-card" onclick="playHLS('https://37b4c228.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWZyX0ZJRkFQbHVzRnJlbmNoX0hMUw/playlist.m3u8', 'FIFA TV French')">
+        <img src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=150" alt="FIFA">
+        <span>FIFA TV French</span>
+      </div>
+      <div class="channel-card" onclick="playHLS('https://ncdn.telewebion.ir/faratar/live/playlist.m3u8', 'IRIB Sports 4K')">
+        <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=150" alt="IRIB">
+        <span>IRIB Sports 4K</span>
+      </div>
+      <div class="channel-card" onclick="playHLS('http://94.130.32.19:8080/sporttv5/index.m3u8', 'Sport TV 5 HD')">
+        <img src="https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=150" alt="SportTV">
+        <span>Sport TV 5 HD</span>
+      </div>
+    </div>
+
+    <div class="section-title">🔴 Live TV & News</div>
+    <div class="channels-grid">
+      <div class="channel-card" onclick="playYouTube('i8VSQO6TlFc', 'Somoy TV Live')">
+        <img src="https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=150" alt="Somoy">
+        <span>Somoy TV Live</span>
+      </div>
+    </div>
   </div>
 
-  <div class="bottom-nav" id="bottomNav"></div>
+  <div class="bottom-bar">
+    <div class="nav-item active">
+      <div>🏠</div>
+      <span>Home</span>
+    </div>
+    <div class="nav-item" onclick="alert('সচল ফ্রি পাবলিক চ্যানেলগুলো এখানে যুক্ত করা হয়েছে!')">
+      <div>⚽</div>
+      <span>Sports</span>
+    </div>
+    <div class="nav-item" onclick="alert('লাইভ নিউজ ক্যাটাগরি')">
+      <div>📰</div>
+      <span>News</span>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script>
-    const channels = {
-      LIVE: [
-        {name: "SOMOY TV LIVE (YOUTUBE)", type: "youtube", id: "i8VSQO6TlFc", logo: "images/somoytv.jpg"}
-      ],
-      SPORTS: [
-        {name: "T SPORTS", type: "hls", url: 'http://172.19.17.4:8090/hls/tsportshd.m3u8', logo: "images/TSports.jpg"},
-        {name: "PTV SPORTS", type: "hls", url: 'http://172.19.17.4:8090/hls/ptvsportshd.m3u8', logo: "images/ptvsports.png"},
-        {name: "A SPORTS", type: "hls", url: 'http://172.19.17.4:8090/hls/ASportsHD.m3u8', logo: "images/asportse.png"},
-        {name: "STAR SPORTS SELECT", type: "hls", url: 'http://172.19.17.4:8090/hls/StarSportsSelect1HD.m3u8', logo: "images/starsportsselect1.png"},
-        {name: "STAR SPORTS 2", type: "hls", url: 'http://172.19.17.4:8090/hls/StarSports2HD.m3u8', logo: "images/starsports2.png"},
-        {name: "STAR SPORTS 1", type: "hls", url: 'http://172.19.17.4:8090/hls/SonyTen5HD.m3u8', logo: "images/starsports1.png"},
-        {name: "SONY SPORTS 3", type: "hls", url: 'http://172.19.17.4:8090/hls/SonyTen2hd.m3u8', logo: "images/sonysports3.png"},
-        {name: "SONY SPORTS 5", type: "hls", url: 'http://172.19.17.4:8090/hls/SonyTen3hd.m3u8', logo: "images/sonysports5.png"},  
-        {name: "BEIN SPORTS1ENG", type: "hls", url: 'http://172.19.17.4:8090/hls/BeinSports1ENG.m3u8', logo: "images/bein1.png"},
-      ],
-      BANGLA: [
-        {name: "SOMOY TV", type: "hls", url: 'http://172.19.17.4:8090/hls/somoytv.m3u8', logo: "images/somoytv.jpg"},
-        {name: "BTV", type: "hls", url: 'http://172.19.17.4:8090/hls/BTVNationalHD.m3u8', logo: "images/BTV.png"},
-        {name: "JALSHA MOVIES", type: "hls", url: 'http://172.19.17.4:8090/hls/JalshaMoviesHD.m3u8', logo: "images/jalshamovies.png"},
-        {name: "SONY AATH", type: "hls", url: 'http://172.19.17.4:8090/hls/SonyAtth.m3u8', logo: "images/sonyaath.png"},
-        {name: "STAR JALSHA", type: "hls", url: 'http://172.19.17.4:8090/hls/StarJalshaHD.m3u8', logo: "images/starjalsha.png"}
-      ],
-      HINDI: [
-        {name: "SONY HD", type: "hls", url: 'http://172.19.17.4:8090/hls/SonyHD.m3u8', logo: "images/sony.png"},
-        {name: "COLORS HD", type: "hls", url: 'http://172.19.17.4:8090/hls/ColorsHD.m3u8', logo: "images/colors.png"},
-        {name: "SONY MAX", type: "hls", url: 'http://172.19.17.4:8090/hls/sonymaxhd.m3u8', logo: "images/sonymax.png"},
-        {name: "STAR PLUS", type: "hls", url: 'http://172.19.17.4:8090/hls/StarPlusHD.m3u8', logo: "images/starplus.png"}
-      ],
-      NEWS: [
-        {name: "ALJAZEERA NEWS", type: "hls", url: 'http://172.19.17.4:8090/hls/ALjazeeraNews.m3u8', logo: "images/aljazeranews.png"},
-        {name: "BBC WORLD", type: "hls", url: 'http://172.19.17.4:8090/hls/bbc_world.m3u8', logo: "images/bbcworldnews.png"},
-      ],
-      MUSIC: [
-        {name: "SANGEET BANGLA", type: "hls", url:'http://172.19.17.4:8090/hls/SangeetBangla.m3u8', logo: "images/sangeetbangla.png"},
-        {name: "9XM", type: "hls", url:'http://172.19.17.4:8090/hls/9xm.m3u8', logo: "images/9xm.png"}
-      ],
-      KIDS: [
-        {name: "DISCOVERY KIDS", type: "hls", url: 'http://172.19.17.4:8090/hls/DiscoveryKids.m3u8', logo: "images/discoveryhd.png"},
-        {name: "CARTOON NETWORK", type: "hls", url: 'http://172.19.17.4:8090/hls/CartoonNetworkHD.m3u8', logo: "images/cnhd.png"}
-      ],
-      ENGLISH: [
-        {name: "AND PICTURE", type: "hls", url: 'http://172.19.17.4:8090/hls/AndPictureHD.m3u8', logo: "images/andpic.png"},
-        {name: "STAR MOVIES HD", type: "hls", url: 'http://172.19.17.4:8090/hls/StarMoviesHD.m3u8', logo: "images/star-movies-hd.jpg"},            
-        {name: "DISCOVERY", type: "hls", url: 'http://172.19.17.4:8090/hls/DiscoveryHD.m3u8', logo: "images/discoveryhd.png"}, 
-        {name: "NAT GEO", type: "hls", url: 'http://172.19.17.4:8090/hls/NatGeoWild.m3u8', logo: "images/natgeo.png"},    
-      ]
-    };
+    let hlsInstance = null;
+    const playerBox = document.getElementById('playerBox');
+    const nowText = document.getElementById('nowPlayingText');
 
-    const bottomNav=document.getElementById('bottomNav');
-    const sectionsContainer=document.getElementById('sectionsContainer');
-    const categories=Object.keys(channels).filter(c=>channels[c].length>0);
+    function playHLS(url, name) {
+      if(hlsInstance) { hlsInstance.destroy(); }
+      playerBox.innerHTML = '<video id="videoPlayer" controls playsinline></video>';
+      const video = document.getElementById('videoPlayer');
+      nowText.textContent = name;
 
-    categories.forEach(cat=>{
-      const btn=document.createElement('div');
-      btn.className='nav-btn';
-      btn.dataset.cat=cat;
-      btn.innerHTML=`<div class="ico">${iconFor(cat)}</div><div class="lbl">${cat}</div>`;
-      btn.onclick=()=>selectCategory(cat,btn);
-      bottomNav.appendChild(btn);
-
-      const section=document.createElement('div');
-      section.className='section';
-      section.id=cat+"Section";
-      section.innerHTML=`<h3>${cat} Channels</h3><div class="channel-grid" id="${cat}Grid"></div>`;
-      sectionsContainer.appendChild(section);
-
-      channels[cat].forEach(ch=>{
-        const div=document.createElement('div');
-        div.className='channel';
-        div.innerHTML=`<img src="${ch.logo}" alt="${ch.name}"><span>${ch.name}</span>`;
-        
-        div.onclick=()=>{
-          if(ch.type === 'youtube') {
-            playYouTube(ch.id);
-          } else {
-            playStream(ch.url);
-          }
-          setNowPlaying(ch.name, cat);
-        };
-        section.querySelector('.channel-grid').appendChild(div);
-      });
-    });
-
-    let hls;
-    const playerWrapper = document.getElementById('player-wrapper');
-
-    function playStream(url){
-      if(!url) return;
-      if(hls){try{hls.destroy();}catch(e){}}
-      
-      playerWrapper.innerHTML = '<video id="tvplayer" controls playsinline></video>';
-      const video = document.getElementById('tvplayer');
-
-      if(Hls.isSupported()){
-        hls=new Hls({maxBufferLength:30});
-        hls.loadSource(url);
-        hls.attachMedia(video);
-        hls.on(Hls.Events.MANIFEST_PARSED,()=>video.play().catch(()=>{}));
-      }else if(video.canPlayType('application/vnd.apple.mpegurl')){
-        video.src=url;video.play().catch(()=>{});
+      if (Hls.isSupported()) {
+        hlsInstance = new Hls();
+        hlsInstance.loadSource(url);
+        hlsInstance.attachMedia(video);
+        hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(()=>{}));
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = url;
+        video.play().catch(()=>{});
       }
     }
 
-    function playYouTube(videoId){
-      if(hls){try{hls.destroy();}catch(e){}}
-      playerWrapper.innerHTML = `
-        <div class="youtube-container">
-          <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
-                  title="YouTube video player" 
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                  allowfullscreen>
-          </iframe>
-        </div>
+    function playYouTube(videoId, name) {
+      if(hlsInstance) { hlsInstance.destroy(); }
+      nowText.textContent = name;
+      playerBox.innerHTML = `
+        <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+                title="YouTube live" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen>
+        </iframe>
       `;
     }
 
-    const nowPlayingEl=document.getElementById('nowPlaying');
-    const nowSubEl=document.getElementById('nowSub');
-    function setNowPlaying(name,cat){
-      nowPlayingEl.textContent=name;nowSubEl.textContent=cat;
-    }
-
-    function selectCategory(cat,el){
-      document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-      el.classList.add('active');
-      document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-      const sec=document.getElementById(cat+"Section");
-      if(sec){sec.classList.add('active');}
-      
-      const first=channels[cat][0];
-      if(first){
-        if(first.type === 'youtube') {
-          playYouTube(first.id);
-        } else {
-          playStream(first.url);
-        }
-        setNowPlaying(first.name,cat);
-      }
-    }
-
-    function iconFor(cat){
-      const map={LIVE: '🔴', SPORTS: '🏆', BANGLA: '🇧🇩', HINDI: '🇮🇳', NEWS: '🗞️', MUSIC: '🎵', KIDS: '🧒', ENGLISH: '🎬'};
-      return map[cat]||'📺';
-    }
-
-    window.onload=()=>{
-      const firstCat=categories[0];
-      if(firstCat){
-        const el=bottomNav.querySelector(`[data-cat="${firstCat}"]`);
-        selectCategory(firstCat,el);
-      }
+    // Default play
+    window.onload = () => {
+      playHLS('https://37b4c228.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWZyX0ZJRkFQbHVzRnJlbmNoX0hMUw/playlist.m3u8', 'FIFA TV French');
     };
-
-    /* PWA Install Logic */
-    let deferredPrompt = null;
-    const installBtn = document.getElementById('installBtn');
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBtn.style.display = 'flex';
-    });
-    installBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) {
-        alert('📱 Install by clicking your browser menu (⋮) and selecting "Install app" or "Add to Home Screen".');
-        return;
-      }
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
-        installBtn.classList.add('hidden');
-      }
-      deferredPrompt = null;
-    });
   </script>
 </body>
 </html>
