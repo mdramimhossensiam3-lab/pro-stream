@@ -3,55 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Live TV Hub - 100% Working Channels</title>
+    <title>Pro Live TV Hub - High Level</title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
     <style>
         :root {
-            --bg-color: #0b0f19;
-            --panel-bg: rgba(17, 24, 39, 0.9);
-            --accent-color: #38bdf8;
+            --bg-color: #030712;
+            --panel-bg: rgba(17, 24, 39, 0.75);
+            --accent-glow: #38bdf8;
             --text-color: #f8fafc;
+            --border-color: rgba(255, 255, 255, 0.08);
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #050811;
+            background: radial-gradient(circle at center, #1e1b4b 0%, #030712 100%);
             color: var(--text-color);
             margin: 0;
-            padding: 10px;
+            padding: 15px;
             box-sizing: border-box;
+            min-height: 100vh;
+        }
+        .header-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .main-layout {
             display: flex;
-            gap: 15px;
-            max-width: 1200px;
+            gap: 20px;
+            max-width: 1250px;
             margin: 0 auto;
         }
-        /* Left Section: Player & Input */
+        /* Left Section (Player & Custom Input) */
         .left-section {
-            flex: 2.5;
+            flex: 2.8;
             display: flex;
             flex-direction: column;
             background: var(--panel-bg);
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
-            border: 1px solid rgba(255,255,255,0.05);
+            backdrop-filter: blur(16px);
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+            border: 1px solid var(--border-color);
         }
-        .top-bar {
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--accent-color);
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: #38bdf8;
             margin-bottom: 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        .live-badge {
+            background: #ef4444;
+            color: white;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 20px;
+            animation: pulse 1.5s infinite;
+            font-weight: bold;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
         }
         #player-container {
             width: 100%;
-            height: 420px;
+            height: 450px;
             background: #000;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
             margin-bottom: 15px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.9);
         }
         .custom-input-box {
             display: flex;
@@ -59,49 +91,60 @@
         }
         .custom-input-box input {
             flex: 1;
-            padding: 10px 12px;
-            border-radius: 8px;
-            border: 1px solid #374151;
-            background: #1f2937;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(31, 41, 55, 0.7);
             color: #fff;
             outline: none;
             font-size: 13px;
+            transition: 0.3s;
+        }
+        .custom-input-box input:focus {
+            border-color: var(--accent-glow);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
         }
         .custom-input-box button {
-            padding: 10px 16px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 8px;
-            background: var(--accent-color);
-            color: #0b0f19;
-            font-weight: bold;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #38bdf8, #0284c7);
+            color: #030712;
+            font-weight: 800;
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.3s;
         }
         .custom-input-box button:hover {
-            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.4);
         }
-        /* Right Section: Channels List */
+        /* Right Section (Sidebar Channels) */
         .right-section {
             flex: 1.2;
             background: var(--panel-bg);
-            border-radius: 12px;
-            padding: 12px;
+            backdrop-filter: blur(16px);
+            border-radius: 16px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
-            border: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
-            max-height: 520px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+            max-height: 535px;
         }
         .search-box {
             width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #374151;
-            background: #1f2937;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(31, 41, 55, 0.7);
             color: #fff;
             outline: none;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             box-sizing: border-box;
+            font-size: 13px;
+        }
+        .search-box:focus {
+            border-color: var(--accent-glow);
         }
         .channels-list {
             flex-grow: 1;
@@ -109,22 +152,31 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            padding-right: 4px;
+            padding-right: 5px;
+        }
+        /* Custom Scrollbar for sleek look */
+        .channels-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .channels-list::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 10px;
         }
         .channel-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            background: #1f2937;
-            padding: 8px 10px;
-            border-radius: 8px;
+            gap: 12px;
+            background: rgba(31, 41, 55, 0.5);
+            padding: 10px 12px;
+            border-radius: 10px;
             cursor: pointer;
             border: 1px solid transparent;
-            transition: 0.2s;
+            transition: all 0.25s ease;
         }
         .channel-item:hover {
-            border-color: var(--accent-color);
-            background: #374151;
+            border-color: var(--accent-glow);
+            background: rgba(55, 65, 81, 0.8);
+            transform: translateX(4px);
         }
         .channel-item span {
             font-size: 13px;
@@ -132,27 +184,32 @@
         }
         @media(max-width: 768px) {
             .main-layout { flex-direction: column; }
-            #player-container { height: 250px; }
-            .right-section { max-height: 350px; }
+            #player-container { height: 260px; }
+            .right-section { max-height: 380px; }
         }
     </style>
 </head>
 <body>
 
+<div class="header-title">⚡ Pro Live TV Hub ⚡</div>
+
 <div class="main-layout">
     <!-- Player Panel -->
     <div class="left-section">
-        <div class="top-bar" id="current-title">Pro Live TV Hub</div>
+        <div class="player-header">
+            <span id="current-title">T Sports FHD</span>
+            <span class="live-badge">LIVE</span>
+        </div>
         <div id="player-container"></div>
         <div class="custom-input-box">
-            <input type="text" id="customUrl" placeholder="আপনার নিজের .m3u8 বা .ts লিংক এখানে পেস্ট করুন...">
-            <button onclick="playCustomStream()">চালু করুন</button>
+            <input type="text" id="customUrl" placeholder="আপনার কাস্টম m3u8 বা .ts লিংক দিন...">
+            <button onclick="playCustomStream()">প্লে করুন</button>
         </div>
     </div>
 
     <!-- Channels List Panel -->
     <div class="right-section">
-        <input type="text" class="search-box" placeholder="Search Channel..." onkeyup="filterChannels()">
+        <input type="text" class="search-box" placeholder="🔍 চ্যানেল সার্চ করুন..." onkeyup="filterChannels()">
         <div class="channels-list" id="channelList">
             <div class="channel-item" onclick="playStream('http://198.195.239.50:8095/tsports/tracks-v1a1/mono.m3u8', 'T Sports FHD')">
                 <span>⚽ T Sports FHD</span>
@@ -160,26 +217,26 @@
             <div class="channel-item" onclick="playStream('http://114.130.57.233:8080/LIVE-Sports/video.m3u8?token=SkQuhAXZxgBan1', 'T Sports FHD 2')">
                 <span>🏏 T Sports FHD 2</span>
             </div>
+            <div class="channel-item" onclick="playStream('https://37b4c228.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWZyX0ZJRkFQbHVzRnJlbmNoX0hMUw/playlist.m3u8', 'FIFA TV French')">
+                <span>🏆 FIFA TV French</span>
+            </div>
+            <div class="channel-item" onclick="playStream('https://dfr80qz435crc.cloudfront.net/MNOP/Amagi/Caze/Caze_TV_BR/1080p-vtt/index.m3u8', 'Cazé TV FHD')">
+                <span>⚽ Cazé TV FHD</span>
+            </div>
+            <div class="channel-item" onclick="playStream('https://ncdn.telewebion.ir/faratar/live/playlist.m3u8', 'IRIB Sports 4K')">
+                <span>🏅 IRIB Sports 4K</span>
+            </div>
+            <div class="channel-item" onclick="playStream('http://94.130.32.19:8080/sporttv5/index.m3u8', 'Sport TV 5 HD')">
+                <span>📺 Sport TV 5 HD</span>
+            </div>
+            <div class="channel-item" onclick="playStream('https://live-aburayhan1106.telewebion.ir/ek/sport1/live/1080p/index.m3u8', 'TW Sports HD')">
+                <span>🎯 TW Sports HD</span>
+            </div>
             <div class="channel-item" onclick="playStream('http://198.195.239.50:8095/btv/tracks-v1a1/mono.m3u8', 'Bangladesh Television (BTV)')">
                 <span>📺 BTV FHD</span>
             </div>
             <div class="channel-item" onclick="playStream('http://198.195.239.50:8095/somoyTv/tracks-v1a1/mono.m3u8', 'Somoy TV FHD')">
                 <span>📰 Somoy TV FHD</span>
-            </div>
-            <div class="channel-item" onclick="playStream('https://live20.bozztv.com/giatvplayout7/giatv-209611/tracks-v1a1/mono.ts.m3u8', 'Gopal Bhar TV')">
-                <span>👶 Gopal Bhar TV</span>
-            </div>
-            <div class="channel-item" onclick="playStream('https://live20.bozztv.com/giatvplayout7/giatv-209902/tracks-v1a1/mono.ts.m3u8', 'Doreamon TV')">
-                <span>🐱 Doreamon TV</span>
-            </div>
-            <div class="channel-item" onclick="playStream('https://live20.bozztv.com/giatvplayout7/giatv-209622/tracks-v1a1/mono.ts.m3u8', 'Motu Patlu TV')">
-                <span>🍿 Motu Patlu TV</span>
-            </div>
-            <div class="channel-item" onclick="playStream('https://live20.bozztv.com/giatvplayout7/giatv-208314/tracks-v1a1/mono.ts.m3u8', 'Tom & Jerry TV')">
-                <span>🐭 Tom & Jerry TV</span>
-            </div>
-            <div class="channel-item" onclick="playStream('https://vodzong.mjunoon.tv:8087/streamtest/SaudiQuran-142/playlist.m3u8', 'Saudi Quran TV')">
-                <span>🕋 Saudi Quran TV</span>
             </div>
         </div>
     </div>
