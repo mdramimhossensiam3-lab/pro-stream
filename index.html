@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Live TV - Playlist Hub</title>
+    <title>Pro Live TV Hub</title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
     <style>
         :root {
@@ -145,7 +145,7 @@
         <div class="top-bar" id="current-title">Pro Live TV Hub</div>
         <div id="player-container"></div>
         <div class="custom-input-box">
-            <input type="text" id="customUrl" placeholder="আপনার .m3u8 বা স্ট্রিম লিংক এখানে পেস্ট করুন...">
+            <input type="text" id="customUrl" placeholder="ডাইरेक्ट .m3u8 বা .ts লিংক পেস্ট করুন...">
             <button onclick="playCustomStream()">চালু করুন</button>
         </div>
     </div>
@@ -154,20 +154,20 @@
     <div class="right-section">
         <input type="text" class="search-box" placeholder="Search Channel..." onkeyup="filterChannels()">
         <div class="channels-list" id="channelList">
-            <div class="channel-item" onclick="playStream('https://raw.githubusercontent.com/rajufreedom71/rajuiptv/refs/heads/main/playlist.m3u', 'Raju IPTV Playlist')">
-                <span>📺 Raju IPTV Playlist</span>
+            <div class="channel-item" onclick="playStream('http://rgkkw.live:80/live/1Aoen7elp5/IgMJ60tmAa/130714.ts', 'T Sports Live')">
+                <span>⚽ T Sports Live</span>
             </div>
-            <div class="channel-item" onclick="playStream('https://raw.githubusercontent.com/abusaeeidx/Mrgify-Tv/refs/heads/main/playlist.m3u', 'Mrgify TV Playlist')">
-                <span>⚽ Mrgify TV Playlist</span>
+            <div class="channel-item" onclick="playStream('https://tvsen5.aynaott.com/PtvSports/index.m3u8', 'PTV Sports')">
+                <span>🏏 PTV Sports</span>
             </div>
-            <div class="channel-item" onclick="playStream('https://raw.githubusercontent.com/abusaeeidx/Yupptv-Playlist/refs/heads/main/playlist.m3u', 'YuppTV Playlist')">
-                <span>📺 YuppTV Playlist</span>
+            <div class="channel-item" onclick="playStream('https://rmtv.akamaized.net/hls/live/2043153/rmtv-es-web/master.m3u8', 'Real Madrid TV')">
+                <span>⚽ Real Madrid TV</span>
             </div>
-            <div class="channel-item" onclick="playStream('https://raw.githubusercontent.com/abusaeeidx/T-Sports-Playlist-Auto-Update/refs/heads/main/combine_playlist.m3u', 'T Sports Auto Update')">
-                <span>🏏 T Sports Playlist</span>
+            <div class="channel-item" onclick="playStream('https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master_3360.m3u8', 'Red Bull TV')">
+                <span>🏎️ Red Bull TV</span>
             </div>
-            <div class="channel-item" onclick="playStream('https://playlist-share-abux.pages.dev/sun-network.m3u', 'Sun NXT Playlist')">
-                <span>🎬 Sun NXT Playlist</span>
+            <div class="channel-item" onclick="playStream('https://dazn-combat-rakuten.amagi.tv/hls/amagi_hls_data_rakutenAA-dazn-combat-rakuten/CDN/master.m3u8', 'DAZN Combat')">
+                <span>🥊 DAZN Combat</span>
             </div>
         </div>
     </div>
@@ -195,7 +195,7 @@
         if (url) {
             playStream(url, 'Custom Stream');
         } else {
-            alert('দয়া করে সঠিক লিংক দিন!');
+            alert('দয়া করে একটি সঠিক ডাইরেক্ট স্ট্রিম লিংক দিন!');
         }
     }
 
@@ -209,7 +209,7 @@
     }
 
     window.onload = function() {
-        playStream('https://raw.githubusercontent.com/rajufreedom71/rajuiptv/refs/heads/main/playlist.m3u', 'Raju IPTV Playlist');
+        playStream('http://rgkkw.live:80/live/1Aoen7elp5/IgMJ60tmAa/130714.ts', 'T Sports Live');
     };
 </script>
 
