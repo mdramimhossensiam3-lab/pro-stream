@@ -1,286 +1,362 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Live TV Hub - High Level</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
-    <style>
-        :root {
-            --bg-color: #030712;
-            --panel-bg: rgba(17, 24, 39, 0.75);
-            --accent-glow: #38bdf8;
-            --text-color: #f8fafc;
-            --border-color: rgba(255, 255, 255, 0.08);
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: radial-gradient(circle at center, #1e1b4b 0%, #030712 100%);
-            color: var(--text-color);
-            margin: 0;
-            padding: 15px;
-            box-sizing: border-box;
-            min-height: 100vh;
-        }
-        .header-title {
-            text-align: center;
-            font-size: 24px;
-            font-weight: 800;
-            background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .main-layout {
-            display: flex;
-            gap: 20px;
-            max-width: 1250px;
-            margin: 0 auto;
-        }
-        /* Left Section (Player & Custom Input) */
-        .left-section {
-            flex: 2.8;
-            display: flex;
-            flex-direction: column;
-            background: var(--panel-bg);
-            backdrop-filter: blur(16px);
-            border-radius: 16px;
-            padding: 18px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
-            border: 1px solid var(--border-color);
-        }
-        .player-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 16px;
-            font-weight: 700;
-            color: #38bdf8;
-            margin-bottom: 12px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-        }
-        .live-badge {
-            background: #ef4444;
-            color: white;
-            font-size: 11px;
-            padding: 3px 8px;
-            border-radius: 20px;
-            animation: pulse 1.5s infinite;
-            font-weight: bold;
-        }
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.4; }
-            100% { opacity: 1; }
-        }
-        #player-container {
-            width: 100%;
-            height: 450px;
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 15px;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.9);
-        }
-        .custom-input-box {
-            display: flex;
-            gap: 10px;
-        }
-        .custom-input-box input {
-            flex: 1;
-            padding: 12px 15px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(31, 41, 55, 0.7);
-            color: #fff;
-            outline: none;
-            font-size: 13px;
-            transition: 0.3s;
-        }
-        .custom-input-box input:focus {
-            border-color: var(--accent-glow);
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
-        }
-        .custom-input-box button {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #38bdf8, #0284c7);
-            color: #030712;
-            font-weight: 800;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .custom-input-box button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.4);
-        }
-        /* Right Section (Sidebar Channels) */
-        .right-section {
-            flex: 1.2;
-            background: var(--panel-bg);
-            backdrop-filter: blur(16px);
-            border-radius: 16px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
-            max-height: 535px;
-        }
-        .search-box {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(31, 41, 55, 0.7);
-            color: #fff;
-            outline: none;
-            margin-bottom: 12px;
-            box-sizing: border-box;
-            font-size: 13px;
-        }
-        .search-box:focus {
-            border-color: var(--accent-glow);
-        }
-        .channels-list {
-            flex-grow: 1;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            padding-right: 5px;
-        }
-        /* Custom Scrollbar for sleek look */
-        .channels-list::-webkit-scrollbar {
-            width: 6px;
-        }
-        .channels-list::-webkit-scrollbar-thumb {
-            background: #374151;
-            border-radius: 10px;
-        }
-        .channel-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: rgba(31, 41, 55, 0.5);
-            padding: 10px 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            border: 1px solid transparent;
-            transition: all 0.25s ease;
-        }
-        .channel-item:hover {
-            border-color: var(--accent-glow);
-            background: rgba(55, 65, 81, 0.8);
-            transform: translateX(4px);
-        }
-        .channel-item span {
-            font-size: 13px;
-            font-weight: 600;
-        }
-        @media(max-width: 768px) {
-            .main-layout { flex-direction: column; }
-            #player-container { height: 260px; }
-            .right-section { max-height: 380px; }
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Live TV Player - Pro Hub</title>
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiTGl2ZSBUViBQbGF5ZXIiLCJzaG9ydF9uYW1lIjoiVFYgUGxheWVyIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwMDAwMDAiLCJ0aGVtZV9jb2xvciI6IiNmZjRkNmd9">
+  <meta name="theme-color" content="#ff4d6d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TV Player">
+  
+  <style>
+    :root{
+      --accent:#ff4d6d;
+      --accent-light:#ff8099;
+      --glass:rgba(255,255,255,0.05);
+      --muted:#bfcbd6;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:"Poppins",Arial,sans-serif;
+      background:url('https://images.unsplash.com/photo-1604079628040-94301bb21b91?auto=format&fit=crop&w=1350&q=80') center/cover no-repeat fixed;
+      color:#fff;overflow-x:hidden;
+    }
+    body::after{
+      content:"";position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:0;
+    }
+
+    .container{position:relative;z-index:2;max-width:1100px;margin:24px auto;padding:18px;}
+
+    header{
+      display:flex;align-items:center;justify-content:center;
+      font-size:22px;font-weight:600;color:var(--accent);
+      text-shadow:0 0 15px var(--accent-light);margin-bottom:14px;
+    }
+
+    /* Install Button */
+    .install-btn-top{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      background:linear-gradient(135deg, var(--accent), var(--accent-light));
+      color:#fff;
+      border:none;
+      padding:12px 24px;
+      border-radius:10px;
+      font-weight:600;
+      font-size:14px;
+      cursor:pointer;
+      margin-bottom:16px;
+      width:100%;
+      transition:all 0.3s ease;
+      box-shadow:0 4px 20px rgba(255,77,109,0.3);
+      position:relative;
+      z-index:2;
+    }
+    .install-btn-top:hover{
+      transform:translateY(-2px);
+      box-shadow:0 6px 30px rgba(255,77,109,0.5);
+    }
+    .install-btn-top:active{
+      transform:scale(0.98);
+    }
+    .install-btn-top .icon{font-size:18px;}
+    .install-btn-top.hidden{display:none;}
+
+    /* player */
+    .player-box{
+      background:rgba(0,0,0,0.45);
+      border-radius:14px;overflow:hidden;
+      box-shadow:0 10px 40px rgba(255,77,109,0.25);
+      border:1px solid rgba(255,255,255,0.04);
+    }
+    video, .youtube-container{
+      width:100%;height:56vw;max-height:520px;background:#000;display:block;
+    }
+    .youtube-container iframe {
+      width:100%;height:100%;border:none;
+    }
+
+    .now-playing{
+      padding:10px 14px;color:#ffe8ee;font-size:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      border-bottom:1px solid rgba(255,255,255,0.04);
+      background:linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+    }
+    .now-playing .title{font-weight:700;color:var(--accent-light);}
+    .now-playing .sub{font-size:13px;color:var(--muted)}
+
+    /* category section */
+    .section{
+      margin-top:20px;display:none;opacity:0;transform:translateY(10px);
+      transition:opacity .3s ease,transform .3s ease;
+    }
+    .section.active{display:block;opacity:1;transform:translateY(0);}
+    .section h3{
+      font-size:18px;color:var(--accent-light);margin-bottom:12px;
+      text-shadow:0 0 8px rgba(255,77,109,0.25)
+    }
+
+    /* grid layout */
+    .channel-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+      gap:16px;
+    }
+    .channel{
+      background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(0,0,0,0.2));
+      border-radius:12px;padding:10px;text-align:center;cursor:pointer;
+      border:1px solid rgba(255,255,255,0.06);
+      transition:all .25s ease;
+      box-shadow:0 4px 12px rgba(0,0,0,0.3);
+    }
+    .channel:hover{
+      transform:translateY(-5px) scale(1.03);
+      border-color:var(--accent);
+      box-shadow:0 10px 25px rgba(255,77,109,0.25);
+    }
+    .channel img{
+      width:90px;height:60px;object-fit:contain;border-radius:8px;
+      margin-bottom:6px;background:#000;
+    }
+    .channel span{
+      display:block;font-size:13px;color:#fff;text-shadow:0 0 4px rgba(0,0,0,0.4);
+    }
+
+    footer{text-align:center;font-size:12px;color:#aaa;margin-top:30px;padding-bottom:30px}
+
+    /* bottom nav */
+    .bottom-nav{
+      position:fixed;left:12px;right:12px;bottom:12px;height:70px;
+      background:linear-gradient(180deg, rgba(30,0,10,0.85), rgba(10,0,0,0.95));
+      border-radius:14px;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.05);
+      display:flex;justify-content:space-around;align-items:center;
+      z-index:50;box-shadow:0 0 25px rgba(255,77,109,0.35);
+      overflow-x: auto;
+    }
+    .nav-btn{
+      color:#ccc;text-align:center;font-size:12px;cursor:pointer;
+      display:flex;flex-direction:column;align-items:center;gap:5px;
+      transition:.2s ease;
+      padding: 0 8px;
+      flex-shrink: 0;
+    }
+    .nav-btn.active{color:var(--accent-light);text-shadow:0 0 10px var(--accent-light);}
+    .nav-btn .ico{font-size:20px}
+    .nav-btn .lbl{font-size:11px}
+
+    @media(max-width:700px){
+      video, .youtube-container{height:60vw}
+      .channel-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;}
+      .install-btn-top{padding:10px 18px;font-size:13px;}
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <button class="install-btn-top" id="installBtn">
+      <span class="icon">📲</span>
+      <span>Install App - Add to Home Screen</span>
+    </button>
 
-<div class="header-title">⚡ Pro Live TV Hub ⚡</div>
-
-<div class="main-layout">
-    <!-- Player Panel -->
-    <div class="left-section">
-        <div class="player-header">
-            <span id="current-title">T Sports FHD</span>
-            <span class="live-badge">LIVE</span>
+    <div class="player-box">
+      <div id="player-wrapper">
+        <video id="tvplayer" controls playsinline></video>
+      </div>
+      <div class="now-playing">
+        <div>
+          <div style="font-size:13px;color:var(--muted)">Now Playing</div>
+          <div class="title" id="nowPlaying">—</div>
         </div>
-        <div id="player-container"></div>
-        <div class="custom-input-box">
-            <input type="text" id="customUrl" placeholder="আপনার কাস্টম m3u8 বা .ts লিংক দিন...">
-            <button onclick="playCustomStream()">প্লে করুন</button>
-        </div>
+        <div class="sub" id="nowSub">Ready</div>
+      </div>
     </div>
 
-    <!-- Channels List Panel -->
-    <div class="right-section">
-        <input type="text" class="search-box" placeholder="🔍 চ্যানেল সার্চ করুন..." onkeyup="filterChannels()">
-        <div class="channels-list" id="channelList">
-            <div class="channel-item" onclick="playStream('http://198.195.239.50:8095/tsports/tracks-v1a1/mono.m3u8', 'T Sports FHD')">
-                <span>⚽ T Sports FHD</span>
-            </div>
-            <div class="channel-item" onclick="playStream('http://114.130.57.233:8080/LIVE-Sports/video.m3u8?token=SkQuhAXZxgBan1', 'T Sports FHD 2')">
-                <span>🏏 T Sports FHD 2</span>
-            </div>
-            <div class="channel-item" onclick="playStream('https://37b4c228.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWZyX0ZJRkFQbHVzRnJlbmNoX0hMUw/playlist.m3u8', 'FIFA TV French')">
-                <span>🏆 FIFA TV French</span>
-            </div>
-            <div class="channel-item" onclick="playStream('https://dfr80qz435crc.cloudfront.net/MNOP/Amagi/Caze/Caze_TV_BR/1080p-vtt/index.m3u8', 'Cazé TV FHD')">
-                <span>⚽ Cazé TV FHD</span>
-            </div>
-            <div class="channel-item" onclick="playStream('https://ncdn.telewebion.ir/faratar/live/playlist.m3u8', 'IRIB Sports 4K')">
-                <span>🏅 IRIB Sports 4K</span>
-            </div>
-            <div class="channel-item" onclick="playStream('http://94.130.32.19:8080/sporttv5/index.m3u8', 'Sport TV 5 HD')">
-                <span>📺 Sport TV 5 HD</span>
-            </div>
-            <div class="channel-item" onclick="playStream('https://live-aburayhan1106.telewebion.ir/ek/sport1/live/1080p/index.m3u8', 'TW Sports HD')">
-                <span>🎯 TW Sports HD</span>
-            </div>
-            <div class="channel-item" onclick="playStream('http://198.195.239.50:8095/btv/tracks-v1a1/mono.m3u8', 'Bangladesh Television (BTV)')">
-                <span>📺 BTV FHD</span>
-            </div>
-            <div class="channel-item" onclick="playStream('http://198.195.239.50:8095/somoyTv/tracks-v1a1/mono.m3u8', 'Somoy TV FHD')">
-                <span>📰 Somoy TV FHD</span>
-            </div>
-        </div>
-    </div>
-</div>
+    <div id="sectionsContainer"></div>
+  </div>
 
-<script>
-    let player;
+  <div class="bottom-nav" id="bottomNav"></div>
 
-    function playStream(url, title) {
-        if (player) {
-            player.destroy();
-        }
-        document.getElementById('current-title').innerText = title;
-        player = new Clappr.Player({
-            source: url,
-            parentId: "#player-container",
-            autoPlay: true,
-            height: "100%",
-            width: "100%",
-        });
-    }
-
-    function playCustomStream() {
-        const url = document.getElementById('customUrl').value.trim();
-        if (url) {
-            playStream(url, 'Custom Stream');
-        } else {
-            alert('দয়া করে সঠিক লিংক দিন!');
-        }
-    }
-
-    function filterChannels() {
-        let input = document.querySelector('.search-box').value.toLowerCase();
-        let items = document.querySelectorAll('.channel-item');
-        items.forEach(item => {
-            let text = item.innerText.toLowerCase();
-            item.style.display = text.includes(input) ? 'flex' : 'none';
-        });
-    }
-
-    window.onload = function() {
-        playStream('http://198.195.239.50:8095/tsports/tracks-v1a1/mono.m3u8', 'T Sports FHD');
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    const channels = {
+      LIVE: [
+        {name: "SOMOY TV LIVE (YOUTUBE)", type: "youtube", id: "i8VSQO6TlFc", logo: "images/somoytv.jpg"}
+      ],
+      SPORTS: [
+        {name: "T SPORTS", type: "hls", url: 'http://172.19.17.4:8090/hls/tsportshd.m3u8', logo: "images/TSports.jpg"},
+        {name: "PTV SPORTS", type: "hls", url: 'http://172.19.17.4:8090/hls/ptvsportshd.m3u8', logo: "images/ptvsports.png"},
+        {name: "A SPORTS", type: "hls", url: 'http://172.19.17.4:8090/hls/ASportsHD.m3u8', logo: "images/asportse.png"},
+        {name: "STAR SPORTS SELECT", type: "hls", url: 'http://172.19.17.4:8090/hls/StarSportsSelect1HD.m3u8', logo: "images/starsportsselect1.png"},
+        {name: "STAR SPORTS 2", type: "hls", url: 'http://172.19.17.4:8090/hls/StarSports2HD.m3u8', logo: "images/starsports2.png"},
+        {name: "STAR SPORTS 1", type: "hls", url: 'http://172.19.17.4:8090/hls/SonyTen5HD.m3u8', logo: "images/starsports1.png"},
+        {name: "SONY SPORTS 3", type: "hls", url: 'http://172.19.17.4:8090/hls/SonyTen2hd.m3u8', logo: "images/sonysports3.png"},
+        {name: "SONY SPORTS 5", type: "hls", url: 'http://172.19.17.4:8090/hls/SonyTen3hd.m3u8', logo: "images/sonysports5.png"},  
+        {name: "BEIN SPORTS1ENG", type: "hls", url: 'http://172.19.17.4:8090/hls/BeinSports1ENG.m3u8', logo: "images/bein1.png"},
+      ],
+      BANGLA: [
+        {name: "SOMOY TV", type: "hls", url: 'http://172.19.17.4:8090/hls/somoytv.m3u8', logo: "images/somoytv.jpg"},
+        {name: "BTV", type: "hls", url: 'http://172.19.17.4:8090/hls/BTVNationalHD.m3u8', logo: "images/BTV.png"},
+        {name: "JALSHA MOVIES", type: "hls", url: 'http://172.19.17.4:8090/hls/JalshaMoviesHD.m3u8', logo: "images/jalshamovies.png"},
+        {name: "SONY AATH", type: "hls", url: 'http://172.19.17.4:8090/hls/SonyAtth.m3u8', logo: "images/sonyaath.png"},
+        {name: "STAR JALSHA", type: "hls", url: 'http://172.19.17.4:8090/hls/StarJalshaHD.m3u8', logo: "images/starjalsha.png"}
+      ],
+      HINDI: [
+        {name: "SONY HD", type: "hls", url: 'http://172.19.17.4:8090/hls/SonyHD.m3u8', logo: "images/sony.png"},
+        {name: "COLORS HD", type: "hls", url: 'http://172.19.17.4:8090/hls/ColorsHD.m3u8', logo: "images/colors.png"},
+        {name: "SONY MAX", type: "hls", url: 'http://172.19.17.4:8090/hls/sonymaxhd.m3u8', logo: "images/sonymax.png"},
+        {name: "STAR PLUS", type: "hls", url: 'http://172.19.17.4:8090/hls/StarPlusHD.m3u8', logo: "images/starplus.png"}
+      ],
+      NEWS: [
+        {name: "ALJAZEERA NEWS", type: "hls", url: 'http://172.19.17.4:8090/hls/ALjazeeraNews.m3u8', logo: "images/aljazeranews.png"},
+        {name: "BBC WORLD", type: "hls", url: 'http://172.19.17.4:8090/hls/bbc_world.m3u8', logo: "images/bbcworldnews.png"},
+      ],
+      MUSIC: [
+        {name: "SANGEET BANGLA", type: "hls", url:'http://172.19.17.4:8090/hls/SangeetBangla.m3u8', logo: "images/sangeetbangla.png"},
+        {name: "9XM", type: "hls", url:'http://172.19.17.4:8090/hls/9xm.m3u8', logo: "images/9xm.png"}
+      ],
+      KIDS: [
+        {name: "DISCOVERY KIDS", type: "hls", url: 'http://172.19.17.4:8090/hls/DiscoveryKids.m3u8', logo: "images/discoveryhd.png"},
+        {name: "CARTOON NETWORK", type: "hls", url: 'http://172.19.17.4:8090/hls/CartoonNetworkHD.m3u8', logo: "images/cnhd.png"}
+      ],
+      ENGLISH: [
+        {name: "AND PICTURE", type: "hls", url: 'http://172.19.17.4:8090/hls/AndPictureHD.m3u8', logo: "images/andpic.png"},
+        {name: "STAR MOVIES HD", type: "hls", url: 'http://172.19.17.4:8090/hls/StarMoviesHD.m3u8', logo: "images/star-movies-hd.jpg"},            
+        {name: "DISCOVERY", type: "hls", url: 'http://172.19.17.4:8090/hls/DiscoveryHD.m3u8', logo: "images/discoveryhd.png"}, 
+        {name: "NAT GEO", type: "hls", url: 'http://172.19.17.4:8090/hls/NatGeoWild.m3u8', logo: "images/natgeo.png"},    
+      ]
     };
-</script>
 
+    const bottomNav=document.getElementById('bottomNav');
+    const sectionsContainer=document.getElementById('sectionsContainer');
+    const categories=Object.keys(channels).filter(c=>channels[c].length>0);
+
+    categories.forEach(cat=>{
+      const btn=document.createElement('div');
+      btn.className='nav-btn';
+      btn.dataset.cat=cat;
+      btn.innerHTML=`<div class="ico">${iconFor(cat)}</div><div class="lbl">${cat}</div>`;
+      btn.onclick=()=>selectCategory(cat,btn);
+      bottomNav.appendChild(btn);
+
+      const section=document.createElement('div');
+      section.className='section';
+      section.id=cat+"Section";
+      section.innerHTML=`<h3>${cat} Channels</h3><div class="channel-grid" id="${cat}Grid"></div>`;
+      sectionsContainer.appendChild(section);
+
+      channels[cat].forEach(ch=>{
+        const div=document.createElement('div');
+        div.className='channel';
+        div.innerHTML=`<img src="${ch.logo}" alt="${ch.name}"><span>${ch.name}</span>`;
+        
+        div.onclick=()=>{
+          if(ch.type === 'youtube') {
+            playYouTube(ch.id);
+          } else {
+            playStream(ch.url);
+          }
+          setNowPlaying(ch.name, cat);
+        };
+        section.querySelector('.channel-grid').appendChild(div);
+      });
+    });
+
+    let hls;
+    const playerWrapper = document.getElementById('player-wrapper');
+
+    function playStream(url){
+      if(!url) return;
+      if(hls){try{hls.destroy();}catch(e){}}
+      
+      playerWrapper.innerHTML = '<video id="tvplayer" controls playsinline></video>';
+      const video = document.getElementById('tvplayer');
+
+      if(Hls.isSupported()){
+        hls=new Hls({maxBufferLength:30});
+        hls.loadSource(url);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED,()=>video.play().catch(()=>{}));
+      }else if(video.canPlayType('application/vnd.apple.mpegurl')){
+        video.src=url;video.play().catch(()=>{});
+      }
+    }
+
+    function playYouTube(videoId){
+      if(hls){try{hls.destroy();}catch(e){}}
+      playerWrapper.innerHTML = `
+        <div class="youtube-container">
+          <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+                  title="YouTube video player" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                  allowfullscreen>
+          </iframe>
+        </div>
+      `;
+    }
+
+    const nowPlayingEl=document.getElementById('nowPlaying');
+    const nowSubEl=document.getElementById('nowSub');
+    function setNowPlaying(name,cat){
+      nowPlayingEl.textContent=name;nowSubEl.textContent=cat;
+    }
+
+    function selectCategory(cat,el){
+      document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+      el.classList.add('active');
+      document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+      const sec=document.getElementById(cat+"Section");
+      if(sec){sec.classList.add('active');}
+      
+      const first=channels[cat][0];
+      if(first){
+        if(first.type === 'youtube') {
+          playYouTube(first.id);
+        } else {
+          playStream(first.url);
+        }
+        setNowPlaying(first.name,cat);
+      }
+    }
+
+    function iconFor(cat){
+      const map={LIVE: '🔴', SPORTS: '🏆', BANGLA: '🇧🇩', HINDI: '🇮🇳', NEWS: '🗞️', MUSIC: '🎵', KIDS: '🧒', ENGLISH: '🎬'};
+      return map[cat]||'📺';
+    }
+
+    window.onload=()=>{
+      const firstCat=categories[0];
+      if(firstCat){
+        const el=bottomNav.querySelector(`[data-cat="${firstCat}"]`);
+        selectCategory(firstCat,el);
+      }
+    };
+
+    /* PWA Install Logic */
+    let deferredPrompt = null;
+    const installBtn = document.getElementById('installBtn');
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'flex';
+    });
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) {
+        alert('📱 Install by clicking your browser menu (⋮) and selecting "Install app" or "Add to Home Screen".');
+        return;
+      }
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        installBtn.classList.add('hidden');
+      }
+      deferredPrompt = null;
+    });
+  </script>
 </body>
 </html>
